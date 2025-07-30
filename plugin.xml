@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="cordova-plugin-nfc-reader"
+        version="1.0.0">
+    
+    <name>NFC Reader Plugin</name>
+    <description>Plugin Apache Cordova per lettori NFC esterni con SDK lc</description>
+    <license>MIT</license>
+    <keywords>cordova,nfc,reader,sdk</keywords>
+    
+    <js-module src="www/nfc-reader.js" name="NFCReader">
+        <clobbers target="NFCReader" />
+    </js-module>
+    
+    <!-- Android Platform -->
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="NFCReader">
+                <param name="android-package" value="com.nfcreader.plugin.NFCReaderPlugin"/>
+            </feature>
+        </config-file>
+        
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.USB_PERMISSION" />
+            <uses-permission android:name="android.permission.BLUETOOTH" />
+            <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+            <uses-permission android:name="android.permission.INTERNET" />
+        </config-file>
+        
+        <source-file src="src/android/NFCReaderPlugin.java" target-dir="src/com/nfcreader/plugin" />
+        <source-file src="src/android/NFCReaderManager.java" target-dir="src/com/nfcreader/plugin" />
+        
+        <!-- Librerie native SDK -->
+        <source-file src="src/android/libs/comproCall.jar" target-dir="libs" />
+        <source-file src="src/android/libs/FM1208.jar" target-dir="libs" />
+        <source-file src="src/android/libs/armeabi-v7a/liblc.so" target-dir="libs/armeabi-v7a" />
+        <source-file src="src/android/libs/arm64-v8a/liblc.so" target-dir="libs/arm64-v8a" />
+        <source-file src="src/android/libs/x86/liblc.so" target-dir="libs/x86" />
+        <source-file src="src/android/libs/x86_64/liblc.so" target-dir="libs/x86_64" />
+    </platform>
+    
+    <!-- iOS Platform (placeholder per future implementazioni) -->
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="NFCReader">
+                <param name="ios-package" value="NFCReaderPlugin"/>
+            </feature>
+        </config-file>
+        
+        <source-file src="src/ios/NFCReaderPlugin.m" />
+        <header-file src="src/ios/NFCReaderPlugin.h" />
+    </platform>
+    
+</plugin>
