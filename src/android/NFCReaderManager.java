@@ -47,16 +47,8 @@ public class NFCReaderManager {
      */
     public boolean initReader(int portType, String devicePath, int baudRate) {
         try {
-            if (portType == PT_USB) {
-                // Connessione USB
-                deviceHandle = call_comPro.lc_init(100, baudRate);
-            } else if (portType == PT_SERIAL) {
-                // Connessione seriale
-                deviceHandle = call_comPro.lc_init_ex(portType, devicePath, baudRate);
-            } else {
-                // Altri tipi di connessione
-                deviceHandle = call_comPro.lc_init_ex(portType, devicePath, baudRate);
-            }
+            // Usa solo lc_init con il tipo di porta
+            deviceHandle = call_comPro.lc_init(portType);
             
             if (deviceHandle != -1) {
                 Log.d(TAG, "Lettore NFC inizializzato con handle: " + deviceHandle);
@@ -123,9 +115,11 @@ public class NFCReaderManager {
             
             byte[] snr = new byte[255];
             byte[] snrSize = new byte[64];
+            int[] tag = new int[1];  // Aggiunto
+            byte[] sak = new byte[1]; // Aggiunto
             
-            // Prova a trovare una carta TypeA
-            int result = call_comPro.lc_card(deviceHandle, (byte)0, snr, snrSize);
+            // Prova a trovare una carta TypeA - FIRMA CORRETTA
+            int result = call_comPro.lc_card(deviceHandle, (byte)0, snr, snrSize, tag, sak);
             
             if (result == 0) {
                 JSONObject cardInfo = new JSONObject();
@@ -140,14 +134,18 @@ public class NFCReaderManager {
                 cardInfo.put("snr", snrHex.toString());
                 cardInfo.put("snrSize", snrSize[0]);
                 cardInfo.put("cardType", "ISO14443-A");
+                cardInfo.put("tag", tag[0]);
+                cardInfo.put("sak", sak[0] & 0xFF);
                 
-                // Prova a identificare il tipo specifico di carta
+                // Prova a identificare il tipo specifico di carta - FIRMA CORRETTA
                 byte[] cardType = new byte[1];
-                int identifyResult = call_comPro.lc_requestAndIdentifyTypeA(deviceHandle, (byte)0, snr, snrSize, cardType);
+                byte[] compliant14443_4 = new byte[1]; // Aggiunto
+                int identifyResult = call_comPro.lc_requestAndIdentifyTypeA(deviceHandle, (byte)0, snr, snrSize, cardType, compliant14443_4);
                 
                 if (identifyResult == 0) {
                     cardInfo.put("specificType", getCardTypeName(cardType[0]));
                     cardInfo.put("typeCode", cardType[0] & 0xFF);
+                    cardInfo.put("iso14443_4", compliant14443_4[0] == 1);
                 }
                 
                 return cardInfo;
@@ -214,8 +212,8 @@ public class NFCReaderManager {
             byte[] keyBytes = hexStringToByteArray(key);
             byte[] dataOut = new byte[16];
             
-            // Autenticazione
-            int authResult = call_comPro.lc_authentication(deviceHandle, (byte)0, (byte)sector, (byte)0, keyBytes);
+            // Autenticazione - FIRMA CORRETTA
+            int authResult = call_comPro.lc_authentication(deviceHandle, (byte)0x60, (byte)sector, keyBytes);
             if (authResult != 0) {
                 Log.e(TAG, "Errore nell'autenticazione: " + authResult);
                 return null;
@@ -380,7 +378,8 @@ public class NFCReaderManager {
             byte[] epcData = new byte[255];
             byte[] epcSize = new byte[4];
             
-            int result = call_comPro.lc_uhf_inventory(deviceHandle, epcData, epcSize);
+            // UHF Inventory - FIRMA CORRETTA
+            int result = call_comPro.lc_uhf_inventory(deviceHandle, (short)200, epcData, epcSize);
             
             if (result == 0) {
                 JSONObject uhfInfo = new JSONObject();
