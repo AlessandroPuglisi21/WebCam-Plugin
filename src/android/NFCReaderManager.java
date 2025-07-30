@@ -47,8 +47,8 @@ public class NFCReaderManager {
      */
     public boolean initReader(int portType, String devicePath, int baudRate) {
         try {
-            // Usa solo lc_init con il tipo di porta
-            deviceHandle = call_comPro.lc_init(portType);
+            // Usa lc_init senza parametri
+            deviceHandle = call_comPro.lc_init();
             
             if (deviceHandle != -1) {
                 Log.d(TAG, "Lettore NFC inizializzato con handle: " + deviceHandle);
@@ -90,7 +90,7 @@ public class NFCReaderManager {
                 return null;
             }
             
-            byte[] version = new byte[128];
+            char[] version = new char[128]; // Cambiato da byte[] a char[]
             int result = call_comPro.lc_getver(deviceHandle, version);
             
             if (result == 0) {
@@ -115,11 +115,9 @@ public class NFCReaderManager {
             
             byte[] snr = new byte[255];
             byte[] snrSize = new byte[64];
-            int[] tag = new int[1];  // Aggiunto
-            byte[] sak = new byte[1]; // Aggiunto
             
-            // Prova a trovare una carta TypeA - FIRMA CORRETTA
-            int result = call_comPro.lc_card(deviceHandle, (byte)0, snr, snrSize, tag, sak);
+            // Prova a trovare una carta TypeA
+            int result = call_comPro.lc_card(deviceHandle, (byte)0, snr, snrSize);
             
             if (result == 0) {
                 JSONObject cardInfo = new JSONObject();
@@ -134,18 +132,14 @@ public class NFCReaderManager {
                 cardInfo.put("snr", snrHex.toString());
                 cardInfo.put("snrSize", snrSize[0]);
                 cardInfo.put("cardType", "ISO14443-A");
-                cardInfo.put("tag", tag[0]);
-                cardInfo.put("sak", sak[0] & 0xFF);
                 
-                // Prova a identificare il tipo specifico di carta - FIRMA CORRETTA
+                // Prova a identificare il tipo specifico di carta
                 byte[] cardType = new byte[1];
-                byte[] compliant14443_4 = new byte[1]; // Aggiunto
-                int identifyResult = call_comPro.lc_requestAndIdentifyTypeA(deviceHandle, (byte)0, snr, snrSize, cardType, compliant14443_4);
+                int identifyResult = call_comPro.lc_requestAndIdentifyTypeA(deviceHandle, (byte)0, snr, snrSize, cardType);
                 
                 if (identifyResult == 0) {
                     cardInfo.put("specificType", getCardTypeName(cardType[0]));
                     cardInfo.put("typeCode", cardType[0] & 0xFF);
-                    cardInfo.put("iso14443_4", compliant14443_4[0] == 1);
                 }
                 
                 return cardInfo;
@@ -212,7 +206,7 @@ public class NFCReaderManager {
             byte[] keyBytes = hexStringToByteArray(key);
             byte[] dataOut = new byte[16];
             
-            // Autenticazione - FIRMA CORRETTA
+            // Autenticazione - FIRMA CORRETTA: rimosso il parametro extra
             int authResult = call_comPro.lc_authentication(deviceHandle, (byte)0x60, (byte)sector, keyBytes);
             if (authResult != 0) {
                 Log.e(TAG, "Errore nell'autenticazione: " + authResult);
@@ -252,8 +246,8 @@ public class NFCReaderManager {
             byte[] keyBytes = hexStringToByteArray(key);
             byte[] dataBytes = hexStringToByteArray(data);
             
-            // Autenticazione
-            int authResult = call_comPro.lc_authentication(deviceHandle, (byte)0, (byte)sector, (byte)0, keyBytes);
+            // Autenticazione - FIRMA CORRETTA: rimosso il parametro extra
+            int authResult = call_comPro.lc_authentication(deviceHandle, (byte)0x60, (byte)sector, keyBytes);
             if (authResult != 0) {
                 Log.e(TAG, "Errore nell'autenticazione: " + authResult);
                 return false;
@@ -331,13 +325,13 @@ public class NFCReaderManager {
                 return false;
             }
             
-            // Implementazione controllo LED
-            int result = call_comPro.lc_led(deviceHandle, on ? (byte)1 : (byte)0);
+            // Controllo LED - FIRMA CORRETTA: (int icdev, int iLED, int on_off)
+            int result = call_comPro.lc_led(deviceHandle, 1, on ? 1 : 0); // 1=LED rosso, 2=LED verde
             
             if (duration > 0 && on) {
                 // Lampeggio per la durata specificata
                 Thread.sleep(duration);
-                call_comPro.lc_led(deviceHandle, (byte)0);
+                call_comPro.lc_led(deviceHandle, 1, 0);
             }
             
             return result == 0;
@@ -378,8 +372,7 @@ public class NFCReaderManager {
             byte[] epcData = new byte[255];
             byte[] epcSize = new byte[4];
             
-            // UHF Inventory - FIRMA CORRETTA
-            int result = call_comPro.lc_uhf_inventory(deviceHandle, (short)200, epcData, epcSize);
+            int result = call_comPro.lc_uhf_inventory(deviceHandle, epcData, epcSize);
             
             if (result == 0) {
                 JSONObject uhfInfo = new JSONObject();
@@ -418,8 +411,10 @@ public class NFCReaderManager {
             }
             
             byte[] dataBytes = hexStringToByteArray(data);
+            byte[] password = new byte[4]; // Password di default (tutti zeri)
             
-            int result = call_comPro.lc_uhf_writeTag(deviceHandle, (byte)bank, (byte)address, (byte)dataBytes.length, dataBytes);
+            // FIRMA CORRETTA: (int icdev, byte bTagBank, int addrWord, int lenWord, byte[] pData, byte[] pPwd)
+            int result = call_comPro.lc_uhf_writeTag(deviceHandle, (byte)bank, address, dataBytes.length / 2, dataBytes, password);
             
             return result == 0;
             
