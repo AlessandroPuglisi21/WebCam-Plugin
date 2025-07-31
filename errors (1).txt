@@ -1,5 +1,5 @@
 Handling project.properties
-searchFor /Users/admin/build-server/1753890907062/inde-container24.5/platforms/android/project.properties
+searchFor /Users/admin/build-server/1753891356588/inde-container24.5/platforms/android/project.properties
 cordova-custom-config: Loaded module dependencies
 cordova-custom-config: Running restoreBackups.js
 cordova-custom-config: Skipping auto-restore of config file backup(s)
@@ -8,14 +8,14 @@ cordova-custom-config: Running applyCustomConfig.js
 DEBUG: Aborting applyCustomConfig.js because current hook 'before_prepare' is not configured hook 'after_prepare'
 cordova-custom-config: Finished applying platform config
 The "AndroidWindowSplashScreenAnimatedIcon" value does not exist. Cordova's default will be used.
-Copy /Users/admin/build-server/1753890907062/inde-container24.5/build-extras.gradle to /Users/admin/build-server/1753890907062/inde-container24.5/platforms/android
-Skip /Users/admin/build-server/1753890907062/inde-container24.5/google-services.json copy (path does not exist)
-searchFor /Users/admin/build-server/1753890907062/inde-container24.5/platforms/android/app/src/main/AndroidManifest.xml
-searchFor /Users/admin/build-server/1753890907062/inde-container24.5/platforms/android/app/src/main/AndroidManifest.xml
-searchFor /Users/admin/build-server/1753890907062/inde-container24.5/platforms/android/app/src/main/java/com/chariotsolutions/nfc/plugin/NfcPlugin.java
-wrote /Users/admin/build-server/1753890907062/inde-container24.5/platforms/android/app/src/main/java/com/chariotsolutions/nfc/plugin/NfcPlugin.java
-searchFor /Users/admin/build-server/1753890907062/inde-container24.5/platforms/android/app/src/main/AndroidManifest.xml
-wrote /Users/admin/build-server/1753890907062/inde-container24.5/platforms/android/app/src/main/AndroidManifest.xml
+Copy /Users/admin/build-server/1753891356588/inde-container24.5/build-extras.gradle to /Users/admin/build-server/1753891356588/inde-container24.5/platforms/android
+Skip /Users/admin/build-server/1753891356588/inde-container24.5/google-services.json copy (path does not exist)
+searchFor /Users/admin/build-server/1753891356588/inde-container24.5/platforms/android/app/src/main/AndroidManifest.xml
+searchFor /Users/admin/build-server/1753891356588/inde-container24.5/platforms/android/app/src/main/AndroidManifest.xml
+searchFor /Users/admin/build-server/1753891356588/inde-container24.5/platforms/android/app/src/main/java/com/chariotsolutions/nfc/plugin/NfcPlugin.java
+wrote /Users/admin/build-server/1753891356588/inde-container24.5/platforms/android/app/src/main/java/com/chariotsolutions/nfc/plugin/NfcPlugin.java
+searchFor /Users/admin/build-server/1753891356588/inde-container24.5/platforms/android/app/src/main/AndroidManifest.xml
+wrote /Users/admin/build-server/1753891356588/inde-container24.5/platforms/android/app/src/main/AndroidManifest.xml
 cordova-custom-config: Loaded module dependencies
 cordova-custom-config: Running applyCustomConfig.js
 DEBUG: Searching config.xml for prefixed elements: custom-preference
@@ -23,7 +23,7 @@ DEBUG: Searching config.xml for prefixed elements: platform[@name='android']/cus
 DEBUG: Searching config.xml for prefixed elements: platform[@name='android']custom-config-file
 DEBUG: Searching config.xml for prefixed elements: platform[@name='android']/custom-resource
 cordova-custom-config: Finished applying platform config
-cordova-plugin-androidx-adapter: Processed 102 source files in 2319ms
+cordova-plugin-androidx-adapter: Processed 102 source files in 2315ms
 cordova-custom-config: Loaded module dependencies
 cordova-custom-config: Running applyCustomConfig.js
 DEBUG: Aborting applyCustomConfig.js because current hook 'before_compile' is not configured hook 'after_prepare'
@@ -69,29 +69,29 @@ use a newer Android Gradle Plugin that has been tested with compileSdk = 34
 > Task :app:compileDebugRenderscript NO-SOURCE
 > Task :app:generateDebugBuildConfig
 > Task :app:javaPreCompileDebug
-> Task :CordovaLib:writeDebugAarMetadata
 > Task :app:generateDebugResValues
-> Task :app:checkDebugAarMetadata
+> Task :CordovaLib:writeDebugAarMetadata
 
 > Task :CordovaLib:compileDebugRenderscript
 The RenderScript APIs are deprecated. They will be removed in Android Gradle plugin 9.0. See the following link for a guide to migrate from RenderScript: https://developer.android.com/guide/topics/renderscript/migrate
 
 > Task :CordovaLib:generateDebugResValues
 > Task :CordovaLib:generateDebugResources
+> Task :app:checkDebugAarMetadata
 > Task :CordovaLib:packageDebugResources
 > Task :app:mapDebugSourceSetPaths
 > Task :app:generateDebugResources
 > Task :app:createDebugCompatibleScreenManifests
 > Task :app:extractDeepLinksDebug
 > Task :CordovaLib:extractDeepLinksDebug
-> Task :CordovaLib:processDebugManifest
 > Task :CordovaLib:compileDebugLibraryResources
+> Task :CordovaLib:generateDebugBuildConfig
+> Task :CordovaLib:processDebugManifest
+> Task :CordovaLib:javaPreCompileDebug
 > Task :CordovaLib:parseDebugLocalResources
 > Task :app:processDebugMainManifest
 > Task :app:processDebugManifest
-> Task :CordovaLib:generateDebugBuildConfig
-> Task :CordovaLib:javaPreCompileDebug
-> Task :app:processDebugManifestForPackage
+> Task :app:mergeDebugResources
 > Task :app:mergeDebugShaders
 > Task :app:compileDebugShaders NO-SOURCE
 > Task :app:generateDebugAssets UP-TO-DATE
@@ -100,60 +100,63 @@ The RenderScript APIs are deprecated. They will be removed in Android Gradle plu
 > Task :CordovaLib:generateDebugAssets UP-TO-DATE
 > Task :CordovaLib:packageDebugAssets
 > Task :CordovaLib:generateDebugRFile
-> Task :app:mergeDebugResources
 > Task :app:mergeDebugAssets
-> Task :app:processDebugResources
 
 > Task :CordovaLib:compileDebugJavaWithJavac
+
+> Task :app:processDebugManifestForPackage
+> Task :CordovaLib:bundleLibCompileToJarDebug
 Note: Some input files use or override a deprecated API.
 Note: Recompile with -Xlint:deprecation for details.
-
 > Task :app:processDebugJavaRes NO-SOURCE
 > Task :CordovaLib:processDebugJavaRes
-> Task :CordovaLib:bundleLibCompileToJarDebug
 > Task :CordovaLib:bundleLibResDebug
 > Task :app:checkDebugDuplicateClasses
+> Task :app:desugarDebugFileDependencies
 > Task :app:compressDebugAssets
+> Task :CordovaLib:bundleLibRuntimeToJarDebug
+> Task :app:mergeDebugJavaResource
+> Task :app:mergeDebugJniLibFolders
+> Task :CordovaLib:mergeDebugJniLibFolders
+> Task :CordovaLib:mergeDebugNativeLibs NO-SOURCE
+> Task :CordovaLib:copyDebugJniLibsProjectOnly
+> Task :app:mergeDebugNativeLibs NO-SOURCE
+> Task :app:stripDebugDebugSymbols NO-SOURCE
+> Task :app:validateSigningDebug
+> Task :app:writeDebugAppMetadata
+> Task :app:writeDebugSigningConfigVersions
+> Task :app:processDebugResources
+> Task :app:mergeExtDexDebug
 
 > Task :app:compileDebugJavaWithJavac FAILED
-/Users/admin/build-server/1753890907062/inde-container24.5/platforms/android/app/src/main/java/com/nfcreader/plugin/NFCReaderManager.java:51: error: cannot find symbol
-deviceHandle = call_comPro.lc_init(portType);
+/Users/admin/build-server/1753891356588/inde-container24.5/platforms/android/app/src/main/java/com/nfcreader/plugin/NFCReaderManager.java:51: error: cannot find symbol
+deviceHandle = call_comPro.lc_init();
 ^
-symbol: method lc_init(int)
+symbol: method lc_init()
 location: variable call_comPro of type comproCall
-/Users/admin/build-server/1753890907062/inde-container24.5/platforms/android/app/src/main/java/com/nfcreader/plugin/NFCReaderManager.java:94: error: incompatible types: byte[] cannot be converted to char[]
-int result = call_comPro.lc_getver(deviceHandle, version);
+/Users/admin/build-server/1753891356588/inde-container24.5/platforms/android/app/src/main/java/com/nfcreader/plugin/NFCReaderManager.java:120: error: method lc_card in class comproCall cannot be applied to given types;
+int result = call_comPro.lc_card(deviceHandle, (byte)0, snr, snrSize);
 ^
-/Users/admin/build-server/1753890907062/inde-container24.5/platforms/android/app/src/main/java/com/nfcreader/plugin/NFCReaderManager.java:256: error: method lc_authentication in class comproCall cannot be applied to given types;
-int authResult = call_comPro.lc_authentication(deviceHandle, (byte)0, (byte)sector, (byte)0, keyBytes);
-^
-required: int,byte,byte,byte[]
-found: int,byte,byte,byte,byte[]
+required: int,byte,byte[],byte[],int[],byte[]
+found: int,byte,byte[],byte[]
 reason: actual and formal argument lists differ in length
-/Users/admin/build-server/1753890907062/inde-container24.5/platforms/android/app/src/main/java/com/nfcreader/plugin/NFCReaderManager.java:335: error: method lc_led in class comproCall cannot be applied to given types;
-int result = call_comPro.lc_led(deviceHandle, on ? (byte)1 : (byte)0);
+/Users/admin/build-server/1753891356588/inde-container24.5/platforms/android/app/src/main/java/com/nfcreader/plugin/NFCReaderManager.java:138: error: method lc_requestAndIdentifyTypeA in class comproCall cannot be applied to given types;
+int identifyResult = call_comPro.lc_requestAndIdentifyTypeA(deviceHandle, (byte)0, snr, snrSize, cardType);
 ^
-required: int,int,int
-found: int,byte
+required: int,byte,byte[],byte[],byte[],byte[]
+found: int,byte,byte[],byte[],byte[]
 reason: actual and formal argument lists differ in length
-/Users/admin/build-server/1753890907062/inde-container24.5/platforms/android/app/src/main/java/com/nfcreader/plugin/NFCReaderManager.java:340: error: method lc_led in class comproCall cannot be applied to given types;
-call_comPro.lc_led(deviceHandle, (byte)0);
+/Users/admin/build-server/1753891356588/inde-container24.5/platforms/android/app/src/main/java/com/nfcreader/plugin/NFCReaderManager.java:375: error: method lc_uhf_inventory in class comproCall cannot be applied to given types;
+int result = call_comPro.lc_uhf_inventory(deviceHandle, epcData, epcSize);
 ^
-required: int,int,int
-found: int,byte
-reason: actual and formal argument lists differ in length
-/Users/admin/build-server/1753890907062/inde-container24.5/platforms/android/app/src/main/java/com/nfcreader/plugin/NFCReaderManager.java:422: error: method lc_uhf_writeTag in class comproCall cannot be applied to given types;
-int result = call_comPro.lc_uhf_writeTag(deviceHandle, (byte)bank, (byte)address, (byte)dataBytes.length, dataBytes);
-^
-required: int,byte,int,int,byte[],byte[]
-found: int,byte,byte,byte,byte[]
+required: int,short,byte[],byte[]
+found: int,byte[],byte[]
 reason: actual and formal argument lists differ in length
 Note: Some input files use or override a deprecated API.
 Note: Recompile with -Xlint:deprecation for details.
 Note: Some input files use unchecked or unsafe operations.
 Note: Recompile with -Xlint:unchecked for details.
-Note: Some messages have been simplified; recompile with -Xdiags:verbose to get full output
-6 errors
+4 errors
 
 FAILURE: Build failed with an exception.
 
@@ -168,12 +171,12 @@ Execution failed for task ':app:compileDebugJavaWithJavac'.
 
 * Get more help at https://help.gradle.org
 
+
 Deprecated Gradle features were used in this build, making it incompatible with Gradle 8.0.
 
 You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
 
 See https://docs.gradle.org/7.6/userguide/command_line_interface.html#sec:command_line_warnings
-
 BUILD FAILED in 8s
-35 actionable tasks: 35 executed
-Command failed with exit code 1: /Users/admin/build-server/1753890907062/inde-container24.5/platforms/android/gradlew -b /Users/admin/build-server/1753890907062/inde-container24.5/platforms/android/build.gradle cdvBuildDebug
+45 actionable tasks: 45 executed
+Command failed with exit code 1: /Users/admin/build-server/1753891356588/inde-container24.5/platforms/android/gradlew -b /Users/admin/build-server/1753891356588/inde-container24.5/platforms/android/build.gradle cdvBuildDebug
