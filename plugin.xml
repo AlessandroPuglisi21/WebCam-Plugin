@@ -35,13 +35,11 @@
         <lib-file src="libs/lc.jar" />
         <lib-file src="libs/jRF.jar" />
         
-        <!-- Librerie native SO (se disponibili) -->
-        <!-- Decommentare se si hanno i file .so nativi
-        <source-file src="src/android/libs/armeabi-v7a/liblc.so" target-dir="libs/armeabi-v7a" />
-        <source-file src="src/android/libs/arm64-v8a/liblc.so" target-dir="libs/arm64-v8a" />
-        <source-file src="src/android/libs/x86/liblc.so" target-dir="libs/x86" />
-        <source-file src="src/android/libs/x86_64/liblc.so" target-dir="libs/x86_64" />
-        -->
+        <!-- Librerie native SO - ORA ATTIVE -->
+        <source-file src="libs/lib/armeabi-v7a/libcomPro.so" target-dir="libs/armeabi-v7a" />
+        <source-file src="libs/lib/arm64-v8a/libcomPro.so" target-dir="libs/arm64-v8a" />
+        <source-file src="libs/lib/x86/libcomPro.so" target-dir="libs/x86" />
+        <source-file src="libs/lib/x86_64/libcomPro.so" target-dir="libs/x86_64" />
     </platform>
     
     <!-- iOS Platform (placeholder per future implementazioni) -->
@@ -52,8 +50,11 @@
             </feature>
         </config-file>
         
+        <!-- Commentato perché i file non esistono ancora -->
+        <!-- 
         <source-file src="src/ios/NFCReaderPlugin.m" />
         <header-file src="src/ios/NFCReaderPlugin.h" />
+        -->
     </platform>
     
 </plugin>
