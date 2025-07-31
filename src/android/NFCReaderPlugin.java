@@ -66,10 +66,7 @@ public class NFCReaderPlugin extends CordovaPlugin {
         cordova.getThreadPool().execute(new Runnable() {
             @Override
             public void run() {
-                try {
-                    // Ottieni il Context dell'applicazione
-                    Context context = cordova.getActivity().getApplicationContext();
-                    
+                try {                   
                     // Estrai i parametri dalle opzioni
                     int portType = options.optInt("portType", 2); // Default USB
                     String devicePath = options.optString("devicePath", "");
