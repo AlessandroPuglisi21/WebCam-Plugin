@@ -63,6 +63,7 @@ public class NFCReaderPlugin extends CordovaPlugin {
     private boolean initReader(JSONArray args, CallbackContext callbackContext) throws JSONException {
         JSONObject options = args.getJSONObject(0);
         
+        cordova.getThreadPool().execute(new Runnable() {
             @Override
             public void run() {
                 try {
