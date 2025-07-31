@@ -420,58 +420,57 @@ public class NFCReaderPlugin extends CordovaPlugin {
         }
         super.onDestroy();
     }
-}
-
-
-private void startReadICODE(final CallbackContext callbackContext) {
-    cordova.getThreadPool().execute(new Runnable() {
-        @Override
-        public void run() {
-            try {
-                boolean success = nfcManager.startReadICODE(new NFCReaderManager.ICODEReadCallback() {
-                    @Override
-                    public void onCardDetected(JSONObject cardData) {
-                        // Invia i dati della carta come risultato di successo
-                        PluginResult result = new PluginResult(PluginResult.Status.OK, cardData);
-                        result.setKeepCallback(true); // Mantieni il callback attivo per più risultati
-                        callbackContext.sendPluginResult(result);
-                    }
+    
+    private void startReadICODE(final CallbackContext callbackContext) {
+        cordova.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    boolean success = nfcManager.startReadICODE(new NFCReaderManager.ICODEReadCallback() {
+                        @Override
+                        public void onCardDetected(JSONObject cardData) {
+                            // Invia i dati della carta come risultato di successo
+                            PluginResult result = new PluginResult(PluginResult.Status.OK, cardData);
+                            result.setKeepCallback(true); // Mantieni il callback attivo per più risultati
+                            callbackContext.sendPluginResult(result);
+                        }
+                        
+                        @Override
+                        public void onError(String error) {
+                            // Invia l'errore ma mantieni il callback attivo
+                            PluginResult result = new PluginResult(PluginResult.Status.ERROR, error);
+                            result.setKeepCallback(true);
+                            callbackContext.sendPluginResult(result);
+                        }
+                    });
                     
-                    @Override
-                    public void onError(String error) {
-                        // Invia l'errore ma mantieni il callback attivo
-                        PluginResult result = new PluginResult(PluginResult.Status.ERROR, error);
-                        result.setKeepCallback(true);
-                        callbackContext.sendPluginResult(result);
+                    if (!success) {
+                        callbackContext.error("Failed to start ICODE reading");
                     }
-                });
-                
-                if (!success) {
-                    callbackContext.error("Failed to start ICODE reading");
+                    // Non inviamo un risultato di successo immediato perché il callback continuerà a inviare risultati
+                    
+                } catch (Exception e) {
+                    callbackContext.error("Error starting ICODE reading: " + e.getMessage());
                 }
-                // Non inviamo un risultato di successo immediato perché il callback continuerà a inviare risultati
-                
-            } catch (Exception e) {
-                callbackContext.error("Error starting ICODE reading: " + e.getMessage());
             }
-        }
-    });
-}
+        });
+    }
 
-private void stopReadICODE(final CallbackContext callbackContext) {
-    cordova.getThreadPool().execute(new Runnable() {
-        @Override
-        public void run() {
-            try {
-                boolean success = nfcManager.stopReadICODE();
-                if (success) {
-                    callbackContext.success("ICODE reading stopped");
-                } else {
-                    callbackContext.error("Failed to stop ICODE reading");
+    private void stopReadICODE(final CallbackContext callbackContext) {
+        cordova.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    boolean success = nfcManager.stopReadICODE();
+                    if (success) {
+                        callbackContext.success("ICODE reading stopped");
+                    } else {
+                        callbackContext.error("Failed to stop ICODE reading");
+                    }
+                } catch (Exception e) {
+                    callbackContext.error("Error stopping ICODE reading: " + e.getMessage());
                 }
-            } catch (Exception e) {
-                callbackContext.error("Error stopping ICODE reading: " + e.getMessage());
             }
-        }
-    });
+        });
+    }
 }
