@@ -47,11 +47,11 @@ public class NFCReaderManager {
      */
     public boolean initReader(int portType, String devicePath, int baudRate) {
         try {
-            // Usa lc_init con parametri corretti
+            // Usa lc_init_ex invece di lc_init per maggiore compatibilità
             if (portType == PT_USB) {
-                deviceHandle = call_comPro.lc_init(100, baudRate); // 100 per USB
+                deviceHandle = call_comPro.lc_init_ex(2, "".toCharArray(), 0); // USB
             } else {
-                deviceHandle = call_comPro.lc_init(0, baudRate); // 0 per COM1
+                deviceHandle = call_comPro.lc_init_ex(1, devicePath.toCharArray(), baudRate); // Serial
             }
             
             if (deviceHandle != -1) {
@@ -114,7 +114,7 @@ public class NFCReaderManager {
             }
             
             byte[] snr = new byte[255];
-            byte[] snrSize = new byte[64];
+            byte[] snrSize = new byte[1]; // Cambiato da array[64] a array[1]
             int[] tag = new int[1];
             byte[] sak = new byte[1];
             
@@ -164,8 +164,8 @@ public class NFCReaderManager {
                 return cardInfo;
             }
             
-            // Prova ISO15693
-            result = call_comPro.lc_find15693(deviceHandle, responseB, resLenB);
+            // Prova ISO15693 - CORREZIONE: aggiunto il parametro reqMode
+            result = call_comPro.lc_find15693(deviceHandle, (byte)0x36, responseB, resLenB);
             
             if (result == 0) {
                 JSONObject cardInfo = new JSONObject();
