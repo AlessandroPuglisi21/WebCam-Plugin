@@ -37,6 +37,17 @@ public class NFCReaderManager {
     private FM1208 call_fm1208;
     private int deviceHandle = -1;
     
+    // Variabili per il polling continuo ICODE
+    private Thread icodePollingThread;
+    private volatile boolean isPollingIcode = false;
+    private ICODEReadCallback icodeCallback;
+    
+    // Interface per il callback delle letture ICODE
+    public interface ICODEReadCallback {
+        void onCardDetected(JSONObject cardData);
+        void onError(String error);
+    }
+    
     public NFCReaderManager() {
         call_comPro = new comproCall();
         call_fm1208 = new FM1208();
@@ -465,6 +476,134 @@ public class NFCReaderManager {
         }
         
         return data;
+    }
+    
+    /**
+     * Avvia la lettura continua delle carte ICODE
+     */
+    public boolean startReadICODE(ICODEReadCallback callback) {
+        if (deviceHandle == -1) {
+            Log.e(TAG, "Device not initialized");
+            return false;
+        }
+        
+        if (isPollingIcode) {
+            Log.w(TAG, "ICODE polling already running");
+            return true;
+        }
+        
+        this.icodeCallback = callback;
+        isPollingIcode = true;
+        
+        icodePollingThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "ICODE polling thread started");
+                
+                while (isPollingIcode) {
+                    try {
+                        // Cerca carte ISO15693/ICODE
+                        byte[] responseB = new byte[64];
+                        byte[] resLenB = new byte[1];
+                        
+                        int result = call_comPro.lc_find15693(deviceHandle, (byte)0x36, responseB, resLenB);
+                        
+                        if (result == 0 && resLenB[0] > 0) {
+                            // Carta trovata, crea oggetto JSON con i dati
+                            JSONObject cardInfo = new JSONObject();
+                            try {
+                                cardInfo.put("success", true);
+                                cardInfo.put("cardType", "ICODE");
+                                cardInfo.put("protocol", "ISO15693");
+                                
+                                // Estrai UID dalla risposta
+                                byte[] uid = new byte[resLenB[0]];
+                                System.arraycopy(responseB, 0, uid, 0, resLenB[0]);
+                                cardInfo.put("uid", byteArrayToHexString(uid));
+                                cardInfo.put("uidLength", resLenB[0]);
+                                
+                                // Leggi informazioni di sistema se possibile
+                                byte[] systemInfo = new byte[32];
+                                byte[] systemInfoLen = new byte[1];
+                                int sysResult = call_comPro.lc_15693_get_systemInfo(deviceHandle, uid, systemInfoLen, systemInfo);
+                                
+                                if (sysResult == 0) {
+                                    cardInfo.put("systemInfo", byteArrayToHexString(systemInfo).substring(0, systemInfoLen[0] * 2));
+                                }
+                                
+                                cardInfo.put("timestamp", System.currentTimeMillis());
+                                
+                                if (icodeCallback != null) {
+                                    icodeCallback.onCardDetected(cardInfo);
+                                }
+                                
+                            } catch (JSONException e) {
+                                Log.e(TAG, "Error creating ICODE card info JSON", e);
+                                if (icodeCallback != null) {
+                                    icodeCallback.onError("JSON creation error: " + e.getMessage());
+                                }
+                            }
+                        }
+                        
+                        // Pausa tra le letture per evitare sovraccarico CPU
+                        Thread.sleep(500); // 500ms di pausa
+                        
+                    } catch (InterruptedException e) {
+                        Log.d(TAG, "ICODE polling thread interrupted");
+                        break;
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error in ICODE polling", e);
+                        if (icodeCallback != null) {
+                            icodeCallback.onError("Polling error: " + e.getMessage());
+                        }
+                        // Continua il polling anche in caso di errore
+                        try {
+                            Thread.sleep(1000); // Pausa più lunga in caso di errore
+                        } catch (InterruptedException ie) {
+                            break;
+                        }
+                    }
+                }
+                
+                Log.d(TAG, "ICODE polling thread stopped");
+            }
+        });
+        
+        icodePollingThread.start();
+        return true;
+    }
+    
+    /**
+     * Ferma la lettura continua delle carte ICODE
+     */
+    public boolean stopReadICODE() {
+        if (!isPollingIcode) {
+            Log.w(TAG, "ICODE polling not running");
+            return true;
+        }
+        
+        isPollingIcode = false;
+        
+        if (icodePollingThread != null) {
+            icodePollingThread.interrupt();
+            try {
+                icodePollingThread.join(2000); // Aspetta max 2 secondi
+            } catch (InterruptedException e) {
+                Log.w(TAG, "Interrupted while waiting for ICODE polling thread to stop");
+            }
+            icodePollingThread = null;
+        }
+        
+        icodeCallback = null;
+        Log.d(TAG, "ICODE polling stopped");
+        return true;
+    }
+    
+    /**
+     * Verifica se il polling ICODE è attivo
+     */
+    public boolean isICODEPollingActive() {
+        return isPollingIcode;
     }
     
     private String byteArrayToHexString(byte[] bytes) {

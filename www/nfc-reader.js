@@ -166,6 +166,24 @@ var NFCReader = {
      */
     writeUHF: function(options, successCallback, errorCallback) {
         exec(successCallback, errorCallback, 'NFCReader', 'writeUHF', [options]);
+    },
+    
+    /**
+     * Avvia la lettura continua delle carte ICODE
+     * @param {Function} successCallback - Callback chiamato quando viene rilevata una carta
+     * @param {Function} errorCallback - Callback chiamato in caso di errore
+     */
+    startReadICODE: function(successCallback, errorCallback) {
+        exec(successCallback, errorCallback, 'NFCReader', 'startReadICODE', []);
+    },
+    
+    /**
+     * Ferma la lettura continua delle carte ICODE
+     * @param {Function} successCallback - Callback chiamato quando la lettura viene fermata
+     * @param {Function} errorCallback - Callback chiamato in caso di errore
+     */
+    stopReadICODE: function(successCallback, errorCallback) {
+        exec(successCallback, errorCallback, 'NFCReader', 'stopReadICODE', []);
     }
 };
 
