@@ -60,36 +60,49 @@ public class NFCReaderPlugin extends CordovaPlugin {
         }
     }
     
-    private boolean initReader(JSONArray args, CallbackContext callbackContext) throws JSONException {
+    private void initReader(JSONArray args, CallbackContext callbackContext) throws JSONException {
         JSONObject options = args.getJSONObject(0);
         
-        cordova.getThreadPool().execute(new Runnable() {
-            @Override
-            public void run() {
+        //cordova.getThreadPool().execute(new Runnable() {
+          //  @Override
+            //public void run() {
                 try {
+                    // Ottieni il Context dell'applicazione
+                    Context context = cordova.getActivity().getApplicationContext();
+                    
+                    // Estrai i parametri dalle opzioni
                     int portType = options.optInt("portType", 2); // Default USB
                     String devicePath = options.optString("devicePath", "");
                     int baudRate = options.optInt("baudRate", 115200);
                     
+                    // Inizializza il manager NFC se non già fatto
+                    if (nfcManager == null) {
+                        nfcManager = new NFCReaderManager();
+                    }
+                    
+                    // Inizializza il dispositivo
                     boolean result = nfcManager.initReader(portType, devicePath, baudRate);
                     
                     if (result) {
                         JSONObject response = new JSONObject();
                         response.put("success", true);
                         response.put("message", "Lettore NFC inizializzato con successo");
+                        response.put("portType", portType);
+                        response.put("baudRate", baudRate);
                         callbackContext.success(response);
                     } else {
                         callbackContext.error("Impossibile inizializzare il lettore NFC");
                     }
                     
                 } catch (Exception e) {
-                    Log.e(TAG, "Errore nell'inizializzazione", e);
+                    e.printStackTrace();
+                    Log.e(TAG, "Errore nell'inizializzazione del lettore NFC", e);
                     callbackContext.error("Errore nell'inizializzazione: " + e.getMessage());
                 }
-            }
-        });
+            //}
+        //});
         
-        return true;
+        //return true;
     }
     
     private boolean disconnect(CallbackContext callbackContext) {
