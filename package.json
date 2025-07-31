@@ -3,6 +3,13 @@
   "version": "1.0.0",
   "description": "Plugin Apache Cordova per lettori NFC esterni con SDK lc",
   "main": "www/nfc-reader.js",
+  "cordova": {
+    "id": "cordova-plugin-nfc-reader",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -26,11 +33,10 @@
   },
   "homepage": "https://github.com/yourusername/cordova-plugin-nfc-reader#readme",
   "engines": {
-    "cordovaDependencies": {
-      ">=7.0.0": {
-        "cordova-android": ">=7.0.0",
-        "cordova-ios": ">=4.5.0"
-      }
-    }
+    "cordova": ">=7.0.0"
+  },
+  "peerDependencies": {
+    "cordova-android": ">=7.0.0",
+    "cordova-ios": ">=4.5.0"
   }
 }

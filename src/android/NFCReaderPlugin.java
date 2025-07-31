@@ -60,12 +60,11 @@ public class NFCReaderPlugin extends CordovaPlugin {
         }
     }
     
-    private void initReader(JSONArray args, CallbackContext callbackContext) throws JSONException {
+    private boolean initReader(JSONArray args, CallbackContext callbackContext) throws JSONException {
         JSONObject options = args.getJSONObject(0);
         
-        //cordova.getThreadPool().execute(new Runnable() {
-          //  @Override
-            //public void run() {
+            @Override
+            public void run() {
                 try {
                     // Ottieni il Context dell'applicazione
                     Context context = cordova.getActivity().getApplicationContext();
@@ -99,10 +98,10 @@ public class NFCReaderPlugin extends CordovaPlugin {
                     Log.e(TAG, "Errore nell'inizializzazione del lettore NFC", e);
                     callbackContext.error("Errore nell'inizializzazione: " + e.getMessage());
                 }
-            //}
-        //});
+            }
+        });
         
-        //return true;
+        return true;
     }
     
     private boolean disconnect(CallbackContext callbackContext) {

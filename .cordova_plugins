@@ -1,0 +1,5 @@
+{
+    "cordova-plugin-nfc-reader": {
+        "PACKAGE_NAME": "cordova-plugin-nfc-reader"
+    }
+}
